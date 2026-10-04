@@ -1,4 +1,5 @@
 'use client';
+import { C } from '@/lib/collections';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -23,9 +24,9 @@ export default function Dashboard() {
     if (!user) return;
     const client = pb();
     Promise.all(
-      SUBJECTS.map((s) => client.collection('questions').getList(1, 1, { filter: `subject="${s}"`, fields: 'id' }).then((r) => [s, r.totalItems] as const)),
+      SUBJECTS.map((s) => client.collection(C.questions).getList(1, 1, { filter: `subject="${s}"`, fields: 'id' }).then((r) => [s, r.totalItems] as const)),
     ).then((e) => setCounts(Object.fromEntries(e))).catch((e) => setError(e.message));
-    client.collection('attempts').getList(1, 200, { sort: '-created', fields: 'id,mode,subject,score,correct,wrong,skipped,total,submitted_at,created' })
+    client.collection(C.attempts).getList(1, 200, { sort: '-created', fields: 'id,mode,subject,score,correct,wrong,skipped,total,submitted_at,created' })
       .then((r) => setAttempts(r.items)).catch(() => {});
   }, [user]);
 

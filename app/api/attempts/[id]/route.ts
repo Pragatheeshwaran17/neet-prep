@@ -1,3 +1,4 @@
+import { C } from '@/lib/collections';
 import { adminPb, handle, HttpError, questionsByIds, toPublic } from '@/lib/server';
 import { deadline, ownAttempt } from '@/lib/attempts';
 
@@ -35,6 +36,6 @@ export const PATCH = handle(async (req, { params }) => {
   }
   const marked = (Array.isArray(body.marked) ? body.marked : []).filter((q: string) => valid.has(q));
   const pb = await adminPb();
-  await pb.collection('attempts').update(a.id, { answers, marked });
+  await pb.collection(C.attempts).update(a.id, { answers, marked });
   return { ok: true };
 });

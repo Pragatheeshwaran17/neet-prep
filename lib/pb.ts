@@ -1,5 +1,6 @@
 'use client';
 import PocketBase from 'pocketbase';
+import { C } from './collections';
 
 export const PB_URL = (process.env.NEXT_PUBLIC_PB_URL || '').replace(/\/+$/, '');
 
@@ -10,6 +11,9 @@ export function pb() {
   if (!client) {
     client = new PocketBase(PB_URL);
     client.autoCancellation(false);
+    // drop a saved login that belongs to a different auth collection (e.g. after a rename)
+    const rec = client.authStore.record;
+    if (rec && rec.collectionName && rec.collectionName !== C.users) client.authStore.clear();
   }
   return client;
 }

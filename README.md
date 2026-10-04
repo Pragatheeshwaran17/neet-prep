@@ -16,8 +16,24 @@ npm run dev                     # open http://localhost:3000
 ```
 NEXT_PUBLIC_PB_URL=https://saravanan.uk
 PB_ADMIN_EMAIL=your-superuser-email
-PB_ADMIN_PASSWORD=your-superuser-password
+PB_ADMIN_PASSWORD="your-superuser-password"
 ```
+
+## Admins
+
+Sign up in the app like a student, then promote that account:
+
+```bash
+npm run make-admin -- you@example.com          # --remove to demote
+```
+
+Log in again → an **Admin** tab appears:
+
+- **Question bank** — stats, papers, and a review screen per paper (edit text/options/answer/images, publish or unpublish, add or delete questions)
+- **Upload PDF** — no AI. The browser reads the PDF's own text positions to find question numbers, `Ans.`, `Sol.` and `PART – SUBJECT` headings, then cuts every question and solution out of the page as a 3× image — English, Hindi, formulas and diagrams exactly as printed. New papers are saved as **drafts**; **Refresh existing paper** re-cuts images but keeps answers and publish status. Works for digital (not scanned) PDFs in this layout.
+- **Students** — every user with tests taken, accuracy, average score and last activity
+
+Drafts are invisible to students until published. A question can't be published without a correct answer.
 
 The superuser login is only used by the server-side API routes (scoring, starting tests). It never reaches the browser.
 
@@ -42,4 +58,8 @@ Anti-cheat: students can read their own attempts but can't create or edit them d
 
 ## Deploy to Vercel (later)
 
-Push to GitHub → import in Vercel → add the same 3 environment variables → Deploy.
+Push to GitHub → import in Vercel → add the same environment variables (`NEXT_PUBLIC_PB_URL`, `PB_ADMIN_EMAIL`, `PB_ADMIN_PASSWORD`) → Deploy.
+
+## Cost
+
+No paid services: Vercel Hobby (non-commercial), GitHub and your own PocketBase server. PDF reading runs in the admin's browser.

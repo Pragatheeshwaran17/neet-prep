@@ -1,4 +1,5 @@
 'use client';
+import { C } from '@/lib/collections';
 import { useEffect, useState } from 'react';
 import type { RecordModel } from 'pocketbase';
 import { pb } from '@/lib/pb';
@@ -10,7 +11,7 @@ export default function History() {
   const [items, setItems] = useState<RecordModel[] | null>(null);
   useEffect(() => {
     if (!user) return;
-    pb().collection('attempts').getFullList({ filter: 'submitted_at != ""', sort: '-submitted_at', fields: 'id,mode,subject,score,correct,wrong,skipped,total,submitted_at' })
+    pb().collection(C.attempts).getFullList({ filter: 'submitted_at != ""', sort: '-submitted_at', fields: 'id,mode,subject,score,correct,wrong,skipped,total,submitted_at' })
       .then(setItems).catch(() => setItems([]));
   }, [user]);
   if (!user) return null;

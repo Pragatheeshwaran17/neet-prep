@@ -1,4 +1,5 @@
 'use client';
+import { C } from '@/lib/collections';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -24,7 +25,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
     e.preventDefault();
     setBusy(true); setError('');
     try {
-      const users = pb().collection('users');
+      const users = pb().collection(C.users);
       if (mode === 'signup') {
         await users.create({ name: form.name, email: form.email, password: form.password, passwordConfirm: form.password, role: 'student' });
       }

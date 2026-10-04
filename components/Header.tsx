@@ -11,7 +11,7 @@ export default function Header() {
   if (path?.startsWith('/test/')) return null; // distraction-free exam screen
 
   const link = (href: string, label: string) => (
-    <Link href={href} className={`rounded-lg px-3 py-1.5 text-sm font-medium ${path === href ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:text-slate-900'}`}>
+    <Link href={href} className={`rounded-lg px-3 py-1.5 text-sm font-medium ${(href === '/admin' ? path?.startsWith('/admin') : path === href) ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:text-slate-900'}`}>
       {label}
     </Link>
   );
@@ -27,6 +27,7 @@ export default function Header() {
           <nav className="ml-2 hidden gap-1 sm:flex">
             {link('/dashboard', 'Dashboard')}
             {link('/history', 'My tests')}
+            {user.role === 'admin' && link('/admin', 'Admin')}
           </nav>
         )}
         <div className="ml-auto flex items-center gap-2">
@@ -52,6 +53,7 @@ export default function Header() {
         <nav className="flex gap-1 border-t border-slate-100 px-4 py-1.5 sm:hidden">
           {link('/dashboard', 'Dashboard')}
           {link('/history', 'My tests')}
+          {user.role === 'admin' && link('/admin', 'Admin')}
         </nav>
       )}
     </header>

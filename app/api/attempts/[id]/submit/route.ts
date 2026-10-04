@@ -1,3 +1,4 @@
+import { C } from '@/lib/collections';
 import { adminPb, handle, HttpError, questionsByIds } from '@/lib/server';
 import { deadline, ownAttempt } from '@/lib/attempts';
 import { MARKS } from '@/lib/types';
@@ -37,7 +38,7 @@ export const POST = handle(async (req, { params }) => {
   const timeTaken = Math.round(Math.min(now.getTime(), dl ?? Infinity) - started) / 1000;
 
   const pb = await adminPb();
-  await pb.collection('attempts').update(a.id, {
+  await pb.collection(C.attempts).update(a.id, {
     answers,
     marked: Array.isArray(body.marked) ? body.marked.filter((q: string) => valid.has(q)) : a.marked,
     correct, wrong, skipped, score,

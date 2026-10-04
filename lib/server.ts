@@ -1,3 +1,4 @@
+import { C } from '@/lib/collections';
 import 'server-only';
 import PocketBase, { type RecordModel } from 'pocketbase';
 import { NextResponse } from 'next/server';
@@ -34,7 +35,7 @@ export async function requireUser(req: Request): Promise<RecordModel> {
   client.autoCancellation(false);
   client.authStore.save(token, null);
   try {
-    const r = await client.collection('users').authRefresh();
+    const r = await client.collection(C.users).authRefresh();
     return r.record;
   } catch {
     throw new HttpError(401, 'Your session has expired. Please log in again.');
@@ -75,7 +76,7 @@ export async function questionsByIds(ids: string[]): Promise<RecordModel[]> {
   for (let i = 0; i < ids.length; i += 50) {
     const chunk = ids.slice(i, i + 50);
     const filter = chunk.map((id) => `id="${id}"`).join(' || ');
-    out.push(...(await pb.collection('questions').getFullList({ filter })));
+    out.push(...(await pb.collection(C.questions).getFullList({ filter })));
   }
   const map = new Map(out.map((q) => [q.id, q]));
   return ids.map((id) => map.get(id)).filter(Boolean) as RecordModel[];
@@ -88,4 +89,25 @@ export function shuffle<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+/** Like requireUser, but the user must have role = "admin" */
+export async function requireAdmin(req: Request): Promise<RecordModel> {
+  const user = await requireUser(req);
+  if (user.role !== 'admin') throw new HttpError(403, 'Admins only');
+  return user;
+}
+
+/** Full question incl. hidden fields, for the admin editor */
+export function toAdmin(q: RecordModel) {
+  return {
+    ...toPublic(q),
+    paper: q.paper as string,
+    answer: (q.answer as number) || null,
+    solution: (q.solution as string) || '',
+    solutionImageUrl: fileUrl(q, 'solution_image'),
+    note: (q.note as string) || '',
+    status: (q.status as string) || 'draft',
+    page: (q.page as number) || null,
+  };
 }

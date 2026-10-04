@@ -199,8 +199,8 @@ export default function TestPage({ params }: { params: Promise<{ id: string }> }
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0">
-          <div className="card p-5 sm:p-6">
-            <div className="flex flex-wrap items-center gap-2 text-sm">
+          <div className="card p-3 sm:p-6">
+            <div className="flex flex-wrap items-center gap-2 px-1 text-sm sm:px-0">
               <span className="font-semibold">Question {idx + 1}</span>
               <span className="text-slate-400">of {qs.length}</span>
               <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${sty?.bg} ${sty?.text}`}>{q.subject}</span>
@@ -210,7 +210,7 @@ export default function TestPage({ params }: { params: Promise<{ id: string }> }
             {q.display === 'image' && q.imageUrl ? (
               <div className="mt-4">
                 <PaperImage src={q.imageUrl} alt={`Question ${idx + 1}`} onZoom={() => setZoom(q.imageUrl)} />
-                <p className="mt-2 text-center text-xs text-slate-400">Tap the image to enlarge</p>
+                <p className="mt-2 text-center text-xs text-slate-400">Tap the question to enlarge · turn your phone sideways for bigger text</p>
               </div>
             ) : (
               <p className="mt-4 text-[17px] leading-relaxed"><Rich html={q.question} /></p>
